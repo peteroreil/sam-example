@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  customer-account-service
+
+Globals:
+  Function:
+    Timeout: 3
+    Runtime: nodejs12.x
+
+Resources:
+  CustomerAccountApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      EndpointConfiguration: REGIONAL
+      DefinitionBody:
+        'Fn::Transform':
+          Name: AWS::Include
+          Parameters:
+            Location: template-swagger.yaml
+
+  AuthorizerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/authorizer-service/
+      Handler: lambda.authorize
+
+  AuthorizerFunctionPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - CustomerAccountApiGateway
+      - AuthorizerFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref AuthorizerFunction
+      Principal: apigateway.amazonaws.com
+
+  GetAccount:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/accounts-service/
+      Handler: lambda.getAccount
+      Events:
+        ApiGatewayApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CustomerAccountApiGateway
+            Path: /api/customer-account/v1/accounts/{accountId}
+            Method: get
+
+  CreateAccount:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/accounts-service/
+      Handler: lambda.createAccount
+      Events:
+        ApiGatewayApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CustomerAccountApiGateway
+            Path: /api/customer-account/v1/accounts
+            Method: post
+
+Outputs:
+  CustomerAccountApiGateway:
+    Description: "Your API Endpoint for this service :)"
+    Value: !Sub "https://${CustomerAccountApiGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/"
