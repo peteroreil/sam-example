@@ -48,7 +48,7 @@ curl --location --request GET 'https://<api-gateway-endpoint>/api/customer-accou
 - Example `POST` request to `/api/customer-account/v1/accounts`
 
 ```
-curl --location --request POST 'https://m7tpbu842a.execute-api.eu-west-1.amazonaws.com/dev/api/customer-account/v1/accounts' \
+curl --location --request POST 'https://<api-gateway-endpoint>/api/customer-account/v1/accounts' \
 --header 'Content-Type: application/json' \
 --data-raw '{
 	"accountName": "my test account"
