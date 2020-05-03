@@ -13,11 +13,8 @@ function authorize(token, arn) {
     let policy;
     if (token === 'letmein') {
         policy = generatePolicy('allow', arn);
-    } else if (token === 'deny') {
-        policy = generatePolicy('deny', arn);
     } else {
-        console.error(`Unauthorized ${token} ${arn}`);
-        throw new Error('Unauthorized');
+        policy = generatePolicy('deny', arn);
     }
     return policy;
 }
