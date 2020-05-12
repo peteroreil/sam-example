@@ -1,4 +1,4 @@
-const httpResponse = require('./utils/httpResponse');
+const httpResponse = require('../utils/httpResponse');
 const accountService = require('./lib');
 
 /**

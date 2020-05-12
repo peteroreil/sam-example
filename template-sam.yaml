@@ -23,8 +23,8 @@ Resources:
   AuthorizerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/authorizer-service/
-      Handler: lambda.authorize
+      CodeUri: accounts-service
+      Handler: authorizer/lambda.authorize
 
   AuthorizerFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -39,8 +39,8 @@ Resources:
   GetAccount:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/accounts-service/
-      Handler: lambda.getAccount
+      CodeUri: accounts-service
+      Handler: accounts/lambda.getAccount
       Events:
         ApiGatewayApiEvent:
           Type: Api
@@ -52,8 +52,8 @@ Resources:
   CreateAccount:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/accounts-service/
-      Handler: lambda.createAccount
+      CodeUri: accounts-service
+      Handler: accounts/lambda.createAccount
       Events:
         ApiGatewayApiEvent:
           Type: Api
